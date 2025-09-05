@@ -76,5 +76,29 @@ print(matrix2.size()) # torch.Size([4, 4])
 print(matrix2.dim())  # 2
 print(matrix2.dtype)  # torch.float64
 ```
+
 ## 텐서가 제공하는 method의 특징
-* 
+* *_like() method
+    * shape, dtype, device : 상속(O)
+    * requires_grad : 상속(X)
+    * empty_like, zeros_like, ones_like, full_like, rand_like, randn_like
+    * 같은 크기의 메모리를 새로 할당함
+* shape 변경 method
+    * reshape() : shape 변경, 메모리 공유/복사
+    * view() : shape만 변하고, 메모리 공유
+    * squeeze() : 크기가 1인 차원 제거, 메모리 공유/복사
+    * unsqueeze() : 크기 1인 차원 추가, 메모리 공유
+    * transpose(), t(), .T : 주어진 차원을 교환, 메모리 공유
+    * permute() : 차원의 순서 재배열, 메모리 공유
+    * flatten() : 1차원으로 평면화, 메모리 공유/복사
+    * expand() : 동일 데이터로 차원을 확장해서 보여줌, 메모리 공유
+    * repeat() : 동일 데이터로 차원을 확장해서 보여줌, 메모리 복사
+    * stack() : 동일 size의 텐서의 배열로 새로운 차원을 추가함, 
+    * cat() : 지정한 차원의 크기를 증가시킴
+
+## 선형회귀란 무엇인가?
+## StandardScaler 활용법
+## 시그모이드 함수란?
+## BCELoss(Binary Cross Entropy) 함수란?
+## CrossEntropyLoss() 함수란?
+## Linear 모델의 파라미터 초기화
