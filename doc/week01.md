@@ -394,7 +394,7 @@
 * 데이터 전처리
     * StandardScaler 사용
 * 문제별 해결 방법 정리
-    |문제              | 해결 방법                  | 활성화 함수| 손실함수 | 출력 | 파라미터 초기화 |
+    |문제      | 해결 방법          | 활성화 함수| 손실함수 | 출력 | 파라미터 초기화 |
     |------------------|--------------------------|-----------|--------|------|--------------|
     |변수간 선형관계 분석 |선형회귀<br>(Linear Regression)|None, ReLU| MSELoss | y feature 수 | ReLU일때<br>He초기화|
     |이진분류<br>(Binary Classification)|로지스틱회귀<br>(Logistic Regression)|sigmoid  | BCELosss | 1개 확률 |Xavier|
