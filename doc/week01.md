@@ -394,11 +394,11 @@
 * 데이터 전처리
     * StandardScaler 사용
 * 문제별 해결 방법 정리
-    |문제              | 해결 방법                  | 활성화 함수| 손실함수 | 출력 |
-    |------------------|--------------------------|-----------|--------|------|
-    |변수간 선형관계 분석 |선형회귀<br>(Linear Regression)|None, ReLU| MSELoss | y feature 수만큼의 임의의 수 |
-    |이진분류<br>(Binary Classification)|로지스틱회귀<br>(Logistic Regression)|sigmoid  | BCELosss | 1개 확률 |
-    |다중분류<br>(Muliclass Classification)|다항로지스틱회귀<br>(Multinomial Logistic Regresssion)|softmax  | CrossEntropyLoss | 클래수 수만큼 (확률분포)|
+    |문제              | 해결 방법                  | 활성화 함수| 손실함수 | 출력 | 파라미터 초기화 |
+    |------------------|--------------------------|-----------|--------|------|--------------|
+    |변수간 선형관계 분석 |선형회귀<br>(Linear Regression)|None, ReLU| MSELoss | y feature 수만큼의<br>임의의 수 | ReLU일때<br>He초기화|
+    |이진분류<br>(Binary Classification)|로지스틱회귀<br>(Logistic Regression)|sigmoid  | BCELosss | 1개 확률 |Xavier|
+    |다중분류<br>(Muliclass Classification)|다항로지스틱회귀<br>(Multinomial Logistic Regresssion)|softmax  | CrossEntropyLoss | 클래수 수만큼<br>(확률분포)|Xavier|
 * parameter초기화
     * paramer 초기화 방법에 따라 학습 속도가 차이가 심하게 나기 때문에 반드시 적절한 초기화 필수
     * Xavier 초기화(추천) : sigmoid 함수에 적합
