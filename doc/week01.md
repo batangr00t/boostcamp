@@ -315,7 +315,18 @@
         # tensor([1.0000, 1.0000])
         ```
 ## 시그모이드 함수란?
-* S 모양의 함수
+* 정의
+    * 원래는 S 모양의 함수를 일컫는 용어지만, 현재는 대부분 logistic fuction으로 사용하고 있음
+    * 시그모이드 함수는 logistic function외에도 tanh(), arctan(), erf() 등이 있음
+    * logistic function = 1/(1+exp(-z))
+* 용도
+    * 이진분류 문제에서 입력변수를 0~1사이의 확률로 매핑하는 역할을 수행함
+    * 예를들면, 시그모이드 함수 출력 결과가 0.5를 넘으면 True, 아니면 False로 판단
+    * 암 진단, 질병 예측, 고객 구매 확률, 대출 상황 여부 등
+* logit()과의 관계
+    * logit() : (0, 1) 확률 -> 실수 전체
+    * sigmoid() : 실수 전체 -> (0, 1) 확률
+    * logit(p) = ln(p/(1-p))
 
 ## BCELoss(Binary Cross Entropy) 함수란?
 * 이진 분류 : BCELoss(), BCEWithLogitsLoss()
@@ -325,3 +336,13 @@
 
 ## Linear 모델의 파라미터 초기화
 * 파라미터 초기화 방법에 따라 학습 퍼포먼스 차이가 심하게 남
+
+## 총정리
+* 데이터 전처리
+    * StandardScaler 사용
+* 문제별 해결 방법 정리
+    |문제              | 해결 방법                  | 활성화 함수| 손실함수 | 출력 |
+    |------------------|--------------------------|-----------|--------|------|
+    |변수간 선형관계 분석 |선형회귀<br>(Linear Regression)|None, ReLU| MSELoss | y feature 수만큼의 임의의 수 |
+    |이진분류<br>(Binary Classification)|로지스틱회귀<br>(Logistic Regression)|sigmoid  | BCELosss | 1개 확률 |
+    |다중분류<br>(Muliclass Classification)|다항로지스틱회귀<br>(Multinomial Logistic Regresssion)|softmax  | CrossEntropyLoss | 클래수 수만큼 (확률분포)|
