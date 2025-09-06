@@ -141,7 +141,6 @@
         # tensor([[25, 15, 29],
         #         [16, 24, 23]])
 
-        # dim-2차원 4개의 배열을 더함 => 결과는 (2,3) shape의 탠서
         a.sum(dim=-1)
         # tensor([[25, 15, 29],
         #         [16, 24, 23]])
@@ -158,6 +157,28 @@
         ```
 
 ## 선형회귀란 무엇인가?
+* 독립변수 x와 종속변수 y의 선형관계를 모델링 하고, 이 모델을 통해 임의의 x로부터 y를 예측 하는데 활용
+* 선형회귀의 종류
+    * 단순선형회귀(Simple Linear Regression)
+        * 독립 변수 x가 한개 => size가 1개인 1-D 텐서 (사이즈가 1인 Vector)
+        * 종속 변수 y가 한개 => size가 1개인 1-D 텐서 (사이즈가 1인 Vector)
+        * y는 x, b의 선형결합이라고 가정
+    * 다중선형회귀(Multiple Linear Regression)
+        * 독립 변수 x가 2개 이상 => size가 2 이상인 1-D 텐서 (사이즈가 2이상인 Vector)
+        * 종속 변수 y가 한개 => size가 1개인 1-D 텐서 (사이즈가 1인 Vector)
+        * y는 x의 각 원소들과 b의 선형결합이라고 가정
+    * 다변량다중선형회귀(Multivariate Multiple Linear Regression)
+        * 독립 변수 x가 2개 이상 => size가 2 이상인 1-D 텐서 (사이즈가 2이상인 Vector)
+        * 종속 변수 y가 2개 이상 => size가 2 이상인 1-D 텐서 (사이즈가 2이상인 Vector)
+        * y는 x의 각 원소들과 b의 선형결합이라고 가정
+* 모델을 찾는 방법
+    * 모델을 수립 : y = W*x + b
+    * 목표 : 수집한 데이터 X, y로 W, b를 찾기
+    * 방법 : train_X, train_y 데이터로 손실함수가 최소가 되는 W, b를 반복적인 방법으로 수행하면서 찾아 나감
+    * 테스트 : 찾은 모델 W, b와 test_X로 예측 값을 계산하여 test_y값과 비교
+* 손실함수 종류
+    * MAE, MSE, RMSE
+    * 
 ## StandardScaler 활용법
 ## 시그모이드 함수란?
 ## BCELoss(Binary Cross Entropy) 함수란?
