@@ -398,7 +398,7 @@
     |------------------|--------------------------|-----------|--------|------|--------------|
     |변수간 선형관계 분석 |선형회귀<br>(Linear Regression)|None, ReLU| MSELoss | y feature 수 | ReLU일때<br>He초기화|
     |이진분류<br>(Binary Classification)|로지스틱회귀<br>(Logistic Regression)|sigmoid  | BCELosss | 1개 확률 |Xavier|
-    |다중분류<br>(Muliclass Classification)|다항로지스틱회귀<br>(Multinomial Logistic Regresssion)|softmax  | CrossEntropyLoss | 클래수 수만큼<br>(확률분포)|Xavier|
+    |다중분류<br>(Muliclass Classification)|다항로지스틱회귀<br>(Multinomial Logistic Regresssion)|히든층 ReLU<br>히든층 None  | CrossEntropyLoss<br>softmax내포 | 클래수 수만큼<br>(확률분포)|ReLU: He초기화<br>None: Xavier|
 * parameter초기화
     * paramer 초기화 방법에 따라 학습 속도가 차이가 심하게 나기 때문에 반드시 적절한 초기화 필수
     * Xavier 초기화(추천) : sigmoid 함수에 적합
