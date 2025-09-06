@@ -192,15 +192,18 @@
         * 종속 변수 y가 2개 이상 => size가 2 이상인 1-D 텐서 (사이즈가 2이상인 Vector)
         * y는 x의 각 원소들과 b의 선형결합이라고 가정
 * 모델을 찾는 방법
-    * 모델을 수립 : y = W*x + b
+    * 모델을 수립 : $y=W*x+b$
     * 목표 : 수집한 데이터 X, y로 W, b를 찾기
     * 방법 : train_X, train_y 데이터로 손실함수가 최소가 되는 W, b를 반복적인 방법으로 수행하면서 찾아 나감
     * 테스트 : 찾은 모델 W, b와 test_X로 예측 값($\hat{y}$)을 계산하여 test_y값과 비교
 * 손실함수 종류
     * MAE, MSE, RMSE
-        * MAE(Mean Absolute Error) : 평균 절대 오차
-        * MSE(Mean Squared Error) : 평균 제곱 오차
-        * RMSE(Root Mean Squared Error) : 평균 제곱근 오차
+        * MAE(Mean Absolute Error) : 평균 절대 오차, 
+          $$MAE=\frac{\sum_{i=1}^{n}|y-\hat{y}|}{n}$$
+        * MSE(Mean Squared Error) : 평균 제곱 오차, 
+          $$MSE=\frac{\sum_{i=1}^{n}(y-\hat{y})^{2}}{n}$$
+        * RMSE(Root Mean Squared Error) : 평균 제곱근 오차, 
+          $$RMSE=\sqrt{\frac{\sum_{i=1}^{n}(y-\hat{y})^{2}}{n}}$$
     * 특징 
         * 학습 속도 : MSE = RMSE > MAE, 오류를 크게 증폭할 수록 학습 속도가 빠름
         * robustness : MAE > RMSE > MSE, 모델이 노이즈나 과장된 입력에 안정성을 유지, MSE는 outlier의 영향을 과도하게 받음
@@ -342,7 +345,7 @@
 * Cross 의미
     * 예측 분포와 실제 분포 사이의 차이를 계산한다는 의미
     * 예측과 실제 값이 단위 초정육면체내의 벡터로 한정되어 있어 유클리디언 거리로 loss를 구하는 것은 한계가 있음
-    * batch size가 n일 때 두 벡터간 거리의 최대값은 √n 임 (두점이 [0,0,0,...], [1,1,1,..] 일 때가 최대 거리)
+    * batch size가 n일 때 두 벡터간 거리의 최대값은 $\sqrt{n}$ 임 (두점이 [0,0,0,...], [1,1,1,..] 일 때가 최대 거리)
     * 잘못 예측한 경우라도 MSE 값은 한정되어 있는 반면, BCE는 무한대까지 커질 수 있음
 * Enthropy 의미
     * (예측과 실제의) 정보량 차이를 분석한다는 의미
