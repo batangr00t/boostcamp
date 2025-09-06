@@ -78,12 +78,13 @@
     ```
 
 ## 텐서가 제공하는 method의 특징
-* 텐서 생성
+* 텐서 생성 method
     * zeros(), ones(), eye(), full(), rand(), randn(), randint()
     * shape 을 파라미터로 입력
         * 0-D : [], ()
-        * 1-D : [2], (3), [2,], (3,)
+        * 1-D : [1], (30), [1,], (30,)
         * 2-D : [3,4], (3,4)
+        * 3-D : [3, 28, 28], (3, 28, 28)
     * *_like() method
         * shape, dtype, device : 상속(O)
         * requires_grad : 상속(X)
@@ -101,14 +102,33 @@
     * repeat() : 동일 데이터로 차원을 확장해서 보여줌, 메모리 복사
     * stack() : 동일 size의 텐서의 배열로 새로운 차원을 추가함, 
     * cat() : 지정한 차원의 크기를 증가시킴
+* 텐서의 대부분의 method는 텐서를 반환 ( 일부 함수는 그렇지 않음 )
+    * 텐서끼리의 연산 : tensor 를 반환
+        * add(), sub(), mul(), div(), +, -, *, /
+        * matmul(), mm(), @
+    * 수학함수 method : tensor 를 반환
+        * 공용함수, 삼각함수, 지수함수, 로그함수, 비교함수, 논리함수, 통계함수, 선형대수 함수 등
+        * abs(), sin(), exp(), log(), gt(), logical_and(), mean(), norm()
+        * tensor(3), tensor([ True,  True,  True]) 같이 스칼라나 논리값도 텐서를 반환
+    * 텐서가 아닌 값으로 출력하는 경우
+        * item() : scalar tensor의 값을 Python 기본 타입으로 반환 
+        * numel() : 텐서의 모든 요소 개수를 Python 기본 타입으로 반환
+        * equal() : 전체 동등성 검사는 Python bool로 반환
+        * size() : torch.Size([2, 2]) - 특별한 튜플 타입
+        * 검사 함수 : is_* 형태의 검사 함수는 Python bool로 반환
+            * is_floating_point()
+            * is_complex()
+            * is_same_size()
+            * is_contiguous()
+
 * dim 의미
     * 텐서는 ndim 차원의 수만큼의 dim을 갖음
-    * 가장 외각 배열의 차원을 dim-0으로 하여 가장 마지막 단계의 차원을 dim-(ndim-1)로 칭함
-    * 가장 마지막 차원을 -1로도 칭함, 그 다음은 -2, ... 가장 외각 배열의 차원은 -ndim 으로 칭함
+    * 가장 외각 배열의 차원을 dim-0으로 하고 가장 마지막 단계의 차원을 dim-(ndim-1)로 칭함
+    * 가장 마지막 차원을 -1로도 칭함, 그 다음은 -2, ... 가장 외각 배열의 차원은 -ndim 으로도 칭함
     * [3, 4, 5] shape의 tensor 의 경우
-        * 0 차원, -3 차원 : 사이즈 3
-        * 1 차원, -2 차원 : 사이즈 4
-        * 2 차원, -1 차원 : 사이즈 5
+        * 0 차원, -3 차원 : 가장 외각 배열, 사이즈 3
+        * 1 차원, -2 차원 : 중간 안쪽 배열, 사이즈 4
+        * 2 차원, -1 차원 : 가장 안쪽 배열, 사이즈 5
     * 예시
         ```python
         a = torch.randint(10, (2,3,4))
@@ -125,18 +145,18 @@
         a.sum()
         # tensor(132)
         
-        # dim-0차원 2개의 배열을 더함, 스칼라 탠서로 변하면서 차원이 사라짐 => 결과는 (3,4) shape의 탠서
+        # dim-0차원 2개의 배열을 더함, 더한 결과가 스칼라 탠서임으로 차원이 사라짐 => 결과는 (3,4) shape의 탠서
         a.sum(dim=0)
         # tensor([[12, 11,  5, 13],
         #         [10, 10, 11,  8],
         #         [15,  9, 13, 15]])
 
-        # dim-1차원 3개의 배열을 더함, 스칼라 텐서로 변하면서 해당 차원이 사라짐 => 결과는 (2,4) shape의 탠서
+        # dim-1차원 3개의 배열을 더함, 더한 결과가 스칼라 탠서임으로 차원이 사라짐 => 결과는 (2,4) shape의 탠서
         a.sum(dim=1)
         #tensor([[21, 19, 11, 18],
         #        [16, 11, 18, 18]])
 
-        # dim-2차원 4개의 배열을 더함, 스칼라 텐서로 변하면서 해당 차원이 사라짐 => 결과는 (2,3) shape의 탠서
+        # dim-2차원 4개의 배열을 더함, 더한 결과가 스칼라 탠서임으로 차원이 사라짐 => 결과는 (2,3) shape의 탠서
         a.sum(dim=2)
         # tensor([[25, 15, 29],
         #         [16, 24, 23]])
@@ -178,8 +198,122 @@
     * 테스트 : 찾은 모델 W, b와 test_X로 예측 값을 계산하여 test_y값과 비교
 * 손실함수 종류
     * MAE, MSE, RMSE
-    * 
+        * MAE(Mean Absolute Error) : 평균 절대 오차
+        * MSE(Mean Squared Error) : 평균 제곱 오차
+        * RMSE(Root Mean Squared Error) : 평균 제곱근 오차
+    * 특징 
+        * 학습 속도 : MSE = RMSE > MAE, 오류를 크게 증폭할 수록 학습 속도가 빠름
+        * robustness : MAE > RMSE > MSE, 모델이 노이즈나 과장된 입력에 안정성을 유지, MSE는 outlier의 영향을 과도하게 받음
+        * 학습 안정성 : MSE = RMSE > MAE, MSE는 전범위에서 미분가능하여 안정적인 학습 가능, MAE는 0에서 미분 불가능
+    * 선택 방법
+        * 일반적으로 MSE를 선택
+        * 데이터에 이상치가 많고, 제거할 수 없을 때는 MAE를 사용
+        * 빠른 학습을 필요할 때 MSE를 사용
+* 반복적으로 최적의 Weight, bias를 찾아나가는 알고리즘
+    * 대부분이 Gradient Descent 방법을 사용
+    * 기본 알고리즘
+        * BGD(Batch Gradient Descent) : 배치 경사 하강법
+        * MGD(Mini-batch Gradient Descent) : 미니배치 경사 하강법
+        * SGD(Stochastic Gradient Descent) : 확률적 경사 하강법
+    * 기본 알고리즘 특징
+        * batch 사이즈를 기준으로 SGD, BGD를 양극단에 두고 그 사이에 MGD가 있음
+        * SGD는 batch size가 1, BGD는 batch size가 train data 건수, 그 사이에 모든 경우가 MGD 방식임
+        * batch size의 의미
+            * batch 사이즈 만큼의 train_X, train_y 데이터로 손실함수를 계산하고 W, b를 update 하는 것을 반복
+            * 결국 W,b(파라미터)를 update 하는 횟수의 차이가 발생 
+                * BGD : batch_size = train_데이터_건수 => 파라미터_업데이트_횟수 = 1
+                * MGD : batch_size = 2이상의 수 => 파라미터_업데이트_횟수 = train_데이터_수 / batch_size
+                * SGD : batch_size = 1 => 파라미터_업데이트_횟수 = train_데이터_수
+            * 배치 사이즈 수 : SGD < MGD < BGD
+            * 파라미터 updat 횟수 : SGD > MGD > BGD
+        * epoch 이란?
+            * 모든 train data를 한 번 완전히 학습하는 단위
+            * 모든 훈련 데이터로 학습을 마치면 1 epoch를 마치는 것
+            * 모든 배치를 다 훈련하면 1 epoch을 마치는 것
+            * 1 epoch 동안 파라미터 update 횟수 : SGD=데이터_수, MGD=데이터_수~1, BGD=1
+        * 기본 알고리즘 중에서는 대부분 MGD를 사용함
+            * SGD, BGD는 양극단의 방법론이며 현재는 이론적인 의미만 있는 듯 ( 여기서도 정-반-합 패턴이 보임 )
+            * SGD 쪽으로 갈수록 파라미터 업데이트가 빨라져 빠른 학습이 이루어지며, 목표달성을 조기에 판단할 수 있어서 효율적임
+            * BGD 쪽으로 갈수록 많은 데이터로 손실함수를 계산하여 정확도가 증가, 대신 업데이트 주기가 길어져 비효율적임
+        * torch 에서는 SGD만 제공하고 여기에서 모든 경우를 수행 : 수학적으로 세가지 모두 동일해서 가능함
+          ```python
+          optimizer = optim.SGD(model.parameters(), lr =0.01)
+          ```
+    * 다양한 개선 알고리즘
+        * Momentum : 관성 추가
+        * Adam : 적용적 학습률
+        * 모두 GD 방식을 기초로 효율성 개선하고 있음 ( 학습률 등 hyper parameter 튜닝 )
+        * 일반적으로 Adam 사용
+
 ## StandardScaler 활용법
+* Linear Regression 모델 찾기 = 손실함수의 값을 거의 0에 수렵시키는 parameter를 찾기
+* 학습을 진행해도 손실 함수의 값이 큰 경우
+    * 학습률이 큰 경우 (ex, 1.0) : 손실함수 값이 진동하거나 발산할 수 있음
+    * 학습률이 작은 경우(ex, 0.000001) : 손실함수 값이 거의 변동이 없음
+    * 모델 문제 : 너무 단순하거나 너무 복잡
+    * 데이터 문제 : 이상치가 많거나, X,y의 feature간 데이터 크기가 너무 차이가 남
+    * 초기화 문제 : 파라미터 초기값에 문제가 있음 ( 최저점을 찾아갈 때 어디에서 부터 시작하는지에 따라 성능 차이가 발생 )
+    * 손실 함수 문제 : 적절한 손실함수가 필요한데 그렇지 못한 경우
+        * 일반적 회귀 : MSELoss()
+        * 이진 분류 : BCELoss(), BCEWithLogitsLoss()
+        * 다중 분류 : CrossEntropyLoss()
+* 데이터 표준화
+    * 데이터 표준화 : 데이터의 평균을 0, 표준편차를 1로 조정함 (표준정규분포를 가지도록 조정)
+    * 표준화 방법 : original data ---(X-=평균)--> zero-centered data ---(X/=표준편차)--> normalized data
+    * 데이터 문제의 경우 표준화 진행하면 효과가 큼
+* StandardScaler
+    * sklearn에 포함된 모듈
+    * 주어진 데이터의 모든 feature의 평균을 0, 분산을 1로 조정
+    * 피처별로 적용
+    * 사용 방법
+        * 한개나 두개의 Scaler를 생성하여 사용
+        * train_X에 적용한 Scaler 생성, y에 적용할 Scaler는 필요할 때만 생성
+        * 생성 후 fit -> transform() -> [ inverse_transform() ] 순서로 사용함
+        * 주의 : training data에 대해서만 fit 수행( test 데이터 정보가 학습시 사용되면 안됨 )
+        * y데이터에 scaler 적용한 경우는 원래 의미를 해석하기 위해 inverse_transform() 수행함
+    * 예시
+        ```python
+        from sklearn.preprocessing import StandardScaler
+
+        X = torch.randn(5, 3).numpy() # 5개의 샘플과 3개의 특성
+        y = torch.randn(5).numpy()    # 5개의 샘플에 대한 타겟 값
+
+        # X에 적용할 scaler 객체 생성
+        scaler = StandardScaler().fit(X)
+        # y에 적용할 scaler 객체 생성
+        scaler_y = StandardScaler().fit(y.reshape(-1, 1))
+        # X에 transform 적용
+        X_scaled = scaler.transform(X)
+        # y에 transform 적용
+        y_scaled = scaler_y.transform(y.reshape(-1, 1)) 
+        ```
+
+* 그 외 scaler
+    * MinMaxScaler : 피처별로 [min, max] 사이의 값으로 변경, 디폴트는 [0, 1], 
+    * Normalizer : 각 샘플별로 단위벡터로 변환, 크기는 중요하지 않고 방향만 중요할 때 사용( 코사인유사도 )
+    * 예시
+        ```python
+        from sklearn.preprocessing import MinMaxScaler, Normalizer
+
+        mm = MinMaxScaler()
+        a = torch.rand((2,3))
+        print(a)
+        # tensor([[0.2034, 0.1720, 0.1887],
+        #         [0.5116, 0.8208, 0.9890]])
+        b = mm.fit_transform(a)
+        print(b)
+        # [[0. 0. 0.]
+        #  [1. 1. 1.]]
+
+        norm = Normalizer(norm='l2')
+        a = torch.rand((2,3))
+        print(a)
+
+        b = norm.fit_transform(a)
+        print(b)
+        print(torch.norm(torch.tensor(b), p=2, dim=1))  # 행벡터의 L2 norm 계산, 모두 1.0이 나옴
+        # tensor([1.0000, 1.0000])
+        ```
 ## 시그모이드 함수란?
 ## BCELoss(Binary Cross Entropy) 함수란?
 ## CrossEntropyLoss() 함수란?
