@@ -195,7 +195,7 @@
     * 모델을 수립 : y = W*x + b
     * 목표 : 수집한 데이터 X, y로 W, b를 찾기
     * 방법 : train_X, train_y 데이터로 손실함수가 최소가 되는 W, b를 반복적인 방법으로 수행하면서 찾아 나감
-    * 테스트 : 찾은 모델 W, b와 test_X로 예측 값을 계산하여 test_y값과 비교
+    * 테스트 : 찾은 모델 W, b와 test_X로 예측 값($\hat{y}$)을 계산하여 test_y값과 비교
 * 손실함수 종류
     * MAE, MSE, RMSE
         * MAE(Mean Absolute Error) : 평균 절대 오차
