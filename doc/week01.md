@@ -330,12 +330,61 @@
 
 ## BCELoss(Binary Cross Entropy) 함수란?
 * 이진 분류 : BCELoss(), BCEWithLogitsLoss()
+* sigmoid()로 확률을 예측할 때 0, 1로 구성된 y 값을 MSE로만 파악하기에는 한계가 있음
+    * Grandient Vanishing 문제 : sigmoid() 미분이 극값에서 0에 가까워짐
+    * 학습 속도 저하 : 틀릴수록 gradient가 작아지는 역설
+    * 대안으로 제시된 함수가 BCELoss() 함수
+* 특징
+    * 0~1 사이의 확률을 입력 받음
+    * sigmoid() 거친 값을 입력으로 전달되어야 함
+    * 0, 1 예측이 얼마나 잘못되었는지를 나타냄
+    * 0~무한대 : 0은 예측이 매우 정확함을 의미, 무한대는 예측이 매우 부정확함을 의미
+* Cross 의미
+    * 예측 분포화, 실제 분포 사이의 차이를 계산한다는 의미
+    * 예측과 실제 값이 단위 초정육면체내의 벡터로 한정되어 있어 유클리디언 거리로 loss를 구하는 것은 한계가 있음
+    * 단위 초정육면체내의 두 벡터간의 거리의 최대값은 √n 임
+    * 잘못 예측한 경우라도 MSE 값은 한정되어 있는 반면, BCE는 무한대까지 커질 수 있음
+* enthropy의미
+    * 예측과 실제의 정보량 차이를 분석한다는 의미
+    * 엔트로피가 0에 가까우면 예측이 맞는 것을 의미
+    * 엔트로피가 커지면 예측이 틀리다는 것을 의미
+    * 엔트로피 0, 확실함
+    * 엔트로피 커지면, 불활실
+    * 무작위로 0, 1을 예측했을 때 cross entropy가 0.693이 나옴 ( 반은 맞고, 반은 틀림 )
 
 ## CrossEntropyLoss() 함수란?
 * 다중 분류 : CrossEntropyLoss()
+* 특징 
+    * logit()값을 입력 받고 있음 
+    * softmax() 결과를 입력하면 안됨 
+    * softmax 함수 호출이 내장됨
+    * 모델 설계시 마지막에 activation 함수가 불필요 함
 
 ## Linear 모델의 파라미터 초기화
 * 파라미터 초기화 방법에 따라 학습 퍼포먼스 차이가 심하게 남
+* 다양한 초기화 방법
+    * zero 초기화 (비추천) : 학습이 제대로 이루어 지지 않음
+    * random 값 (비추천) : 가능은 하지만 효율적이지 않음
+    * Xavier 초기화(추천) : sigmoid 함수에 적합
+    * He초기화(추천) : ReLU 함수에 적합
+* 검증된 모듈 사용 ( torch 같은 )
+    ```python
+    from torch import nn
+
+    weight = torch.empty(3, 5)
+
+    # sigmoid ( xavier 초기화 )
+    nn.init.xavier_normal_(weight)
+    print(weight)
+    nn.init.xavier_uniform_(weight)
+    print(weight)
+
+    # ReLU ( He 초기화 )
+    nn.init.kaiming_normal_(weight, mode='fan_in', nonlinearity='relu')
+    print(weight)
+    nn.init.kaiming_uniform_(weight, mode='fan_in', nonlinearity='relu')
+    print(weight)
+    ```
 
 ## 총정리
 * 데이터 전처리
@@ -346,3 +395,7 @@
     |변수간 선형관계 분석 |선형회귀<br>(Linear Regression)|None, ReLU| MSELoss | y feature 수만큼의 임의의 수 |
     |이진분류<br>(Binary Classification)|로지스틱회귀<br>(Logistic Regression)|sigmoid  | BCELosss | 1개 확률 |
     |다중분류<br>(Muliclass Classification)|다항로지스틱회귀<br>(Multinomial Logistic Regresssion)|softmax  | CrossEntropyLoss | 클래수 수만큼 (확률분포)|
+* parameter초기화
+    * paramer 초기화 방법에 따라 학습 속도가 차이가 심하게 나기 때문에 반드시 적절한 초기화 필수
+    * Xavier 초기화(추천) : sigmoid 함수에 적합
+    * He초기화(추천) : ReLU 함수에 적합
