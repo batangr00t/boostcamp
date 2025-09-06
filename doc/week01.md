@@ -315,6 +315,13 @@
         # tensor([1.0000, 1.0000])
         ```
 ## 시그모이드 함수란?
+* S 모양의 함수
+
 ## BCELoss(Binary Cross Entropy) 함수란?
+* 이진 분류 : BCELoss(), BCEWithLogitsLoss()
+
 ## CrossEntropyLoss() 함수란?
+* 다중 분류 : CrossEntropyLoss()
+
 ## Linear 모델의 파라미터 초기화
+* 파라미터 초기화 방법에 따라 학습 퍼포먼스 차이가 심하게 남
