@@ -88,7 +88,7 @@
 
 ## Singular Value Decomposition(SVD)
 * 행렬 A는 아래와 같이 분해할 수 있음
-    * $ A=U\Sigma V^{T} $
+    * $A=U \Sigma V^{T}$
 * 활용
     * 인버스에 활용
         * $ A^{+} = V\Sigma^{+}U^{T} $ 
@@ -99,17 +99,29 @@
             |full rank(row or column)|pseudo inverse<br>(Moore-Penrose inverse)| np.linalg.pinv(A) |  torch.linalg.pinv(A) |
             |square matrix일 필요 없음<br>singular도 됨<br>rank=0일 때도 됨|SVD| np.linalg.svd(A, full_matrices=False) | torch.linalg.svd(A, full_matrices=False)|
     * eigen decposition 구하는데 활용 ( 제한적 )
-    * 
-* 
 
 ## 다중선형회귀 구조 분석
-* 손실함수로 MSE를 사용할 때 다중선형회귀 구조는 아래와 같음
-    * 데이터 $ X=(m,n), y=(m,1)$가 주어질 때 
-    * $\hat{y} = X\beta + b, \qquad \hat{y}=(m,1), X=(m,n), \beta=(n,1), b=(1,1)  $
+* 일반적인 선형회귀 구조
+    * 데이터 $ X=(m,n), y=(m,1)$가 주어짐
+    * 주어진 데이터는 X -> Linear function => activation function -> loss function 를 거처 scalar로 계산
+        * Linear function : $z = X\beta + b, \qquad z=(m,1), X=(m,n), \beta=(n,1), b=(1,1)$
+            * 엄밀한 관점에서는 선형변환이 아니지만, $[X, 1]$ 형태로 해석할 수 있기 때문에 선형 변환이라고 인식함
+            * $[X, 1]$ column들의 선형결합(linear combination)을 계산하여 변환
+        * activation function : $\hat{y} = \sigma(z), \qquad \hat{y}=(m,1), z=(m,1)  $
+            * 비선형성을 가미하여 다양한 비선형 모델을 만들기 위해 추가
+            * activation 함수를 사용하지 않을 경우엔 activation function으로 identity() 함수를 사용한 것으로 간주할 수 있음
+            * 활성화 함수 종류 : step(), sigmoid(), tanh(), ReLU(), leakyReLU(), softmax()
+            * 모두 vector를 같은 shape의 vector로 변환하는 element-wise 함수
+        * loss function : $L = loss(y, \hat{y}) \qquad L=(1,1), y=(m,1), \hat{y}=(m,1) $
+            * 예측값과 target의 차이를 측정하기 위해 사용, 이 손실을 최소화 하는 방향으로 최적화 진행
+            * 손실 함수 종류 : MAE, MSE, RMSE, BCE, CCE
+            * 모두 vector를 스칼라로 변환하는 함수
+    * 학습한 결과를 활용할 때는
+        * 취득한 데이터가 $x$일 때 $x\beta +b$로 결과 예측, $x=(1,n), \beta=(n,1), b=(1,1)$
     * 이를 시각적으로 표현하면 
         * training
-            * 주어진 데이터 $ X, y$로 training과정을 거쳐 $\beta, b$ 구하기
-            * $MSE = \frac{1}{m}\lVert y - \hat{y} \rVert^2 $ 가 가장 작아지도록 $\beta, b$ 를 최적화
+            * 주어진 데이터 $X, y$로 training과정을 거쳐 $\beta, b$ 구하기
+            * loss function의 결과가 최소화 되도록 $\beta, b$를 update 시킴
             * $X, y$: 상수,  $\beta, b$: 변수
         $$
         \begin{bmatrix}
@@ -129,7 +141,16 @@
         \end{bmatrix} +
          \begin{bmatrix}
             b 
-        \end{bmatrix} = 
+        \end{bmatrix} =
+        \begin{bmatrix}
+            z_1 \\
+            z_2 \\
+            \vdots \\
+            \vdots \\
+            \vdots \\
+            \vdots \\
+            z_m \\
+        \end{bmatrix} \xrightarrow{\sigma}
         \begin{bmatrix}
             \hat{y}_1 \\
             \hat{y}_2 \\
@@ -151,7 +172,7 @@
         $$
         * 추론
             * 주어진 파라미터 $\beta, b$로 임의의 $x$에 대한 결과 구하기
-            * $x\beta +b$로 예측하고 결과 $\hat{y}$은 real $y$에 근접할 것이라고 기대
+            * $\sigma(x\beta +b)$로 예측하고 결과 $\hat{y}$은 real $y$에 근접할 것이라고 기대
             * $\beta, b$: 상수, $x$: 변수
         $$
         \begin{bmatrix}
@@ -165,26 +186,131 @@
         \end{bmatrix} +
         \begin{bmatrix}
             b 
-        \end{bmatrix} = 
+        \end{bmatrix} =
+        \begin{bmatrix}
+            z 
+        \end{bmatrix} \xrightarrow{\sigma} 
         \begin{bmatrix}
             \hat{y}
         \end{bmatrix} \approx
         \begin{bmatrix}
             y
         \end{bmatrix}
-        $$
+        $$        
+    * 최적화 방법 : 경사하강법(Gradient descent)
+        * 손실함수가 줄어드는 방향으로 $\beta, b$를 수정을 반복 수행
+        * 손실함수에 대한 $\beta, b$의 편미분이 사용됨
+            $$
+            \begin{align*} 
+            & \frac{\partial L}{\partial \beta} = \frac{\partial L}{\partial \hat{y}} 
+                                                \frac{\partial \hat{y}}{\partial z}
+                                                \frac{\partial z}{\partial \beta},  
+            \qquad \frac{\partial L}{\partial b} = \frac{\partial L}{\partial \hat{y}} 
+                                                \frac{\partial \hat{y}}{\partial z}
+                                                \frac{\partial z}{\partial b}  \\
+            \end{align*}
+            $$
+            * $\frac{\partial L}{\partial \hat{y}}$ : 손실함수에 따라 달라짐
+            * $\frac{\partial \hat{y}}{\partial z}$ : 액티베이션 함수에 따라 달라짐
+            * $\frac{\partial z}{\partial \beta}, \frac{\partial z}{\partial b}$: 다중선형회귀는 항상 동일
+        * 각 편미분을 구해보면
+            * $\frac{\partial L}{\partial \hat{y}}$ 은 손실함수별로 달라지나 형태는 동일함
+                $$
+                \frac{\partial L}{\partial \hat{y}} =                 
+                \begin{bmatrix}
+                    \frac{\partial L}{\partial \hat{y}_1} \\
+                    \frac{\partial L}{\partial \hat{y}_2} \\
+                    \vdots \\
+                    \frac{\partial L}{\partial \hat{y}_m} \\
+                \end{bmatrix}, \qquad \frac{\partial L}{\partial \hat{y}_i} \text{ 는 i번째 예측값이 변할 때 Loss의 변화율을 의미 }
+                $$
+            * $\frac{\partial \hat{y}}{\partial z}$ 은 activaion function 별로 달라지나 형태는 동일함
+                $$
+                \frac{\partial \hat{y}}{\partial z} =
+                \begin{bmatrix}
+                    \frac{\partial \hat{y}_1}{\partial z_1} & 0 & \cdots & 0\\
+                    0 & \frac{\partial \hat{y}_2}{\partial z_2}  & \cdots & 0\\
+                    \vdots & \vdots & \ddots & \vdots \\
+                    0 & 0 & \cdots & \frac{\partial \hat{y}_m}{\partial z_m} \\
+                \end{bmatrix}, \qquad \frac{\partial \hat{y}_i}{\partial z_i}  \text{ 는 i번째 선형변환 값이 변할 때 i번째 예측값의 변화율을 의미 }
+                $$
+                * $\frac{\partial \hat{y}_i}{\partial z_j} = 0, \text{ when } i \neq j$ \
+                activation funtion은 element-wise 함수이기 때문에 위치가 다른 변수끼리 영향을 주지 않음
+                * 코드로 실행할 때는 $\frac{\partial \hat{y}}{\partial z}$ 를 대각선 성분만으로 vector로 생성하고 element-wise product로 처리
+                ```python
+                # error = dL/dy_hat, (m,1) shape
+                dy_hat_dz = - ( y - y_hat ) # (m,1) vector로 처리
+                dL_dz = error * dy_hat_dz   # *는 element-wise product 
+                ```
+            * $\frac{\partial z}{\partial \beta}, \frac{\partial z}{\partial b}$ 는 다중선형회귀에서는 항상 동일함
+                * $z = X\beta + b$
+                $$
+                \begin{bmatrix}
+                    x_{11} & x_{12} & \cdots & x_{1n} \\
+                    x_{21} & x_{22} & \cdots & x_{2n} \\
+                    \vdots & \vdots & \vdots & \vdots \\
+                    \vdots & \vdots & \vdots & \vdots \\
+                    \vdots & \vdots & \vdots & \vdots \\
+                    \vdots & \vdots & \vdots & \vdots \\
+                    x_{m1} & x_{m2} & \cdots & x_{mn} \\
+                \end{bmatrix} @
+                \begin{bmatrix}
+                    \beta_1 \\
+                    \beta_2 \\
+                    \vdots \\
+                    \beta_n \\
+                \end{bmatrix} +
+                \begin{bmatrix}
+                    b 
+                \end{bmatrix} =
+                \begin{bmatrix}
+                    z_1 \\
+                    z_2 \\
+                    \vdots \\
+                    \vdots \\
+                    \vdots \\
+                    \vdots \\
+                    z_m \\
+                \end{bmatrix} 
+                $$
+                * 다음과 같은 형식
+                $$
+                \begin{align*} 
+                & \frac{\partial z}{\partial \beta} =
+                \begin{bmatrix}
+                    \frac{\partial z_1}{\partial \beta_1} & \frac{\partial z_2}{\partial \beta_1} & \cdots &\frac{\partial z_m}{\partial \beta_1} \\
+                    \frac{\partial z_1}{\partial \beta_2} & \frac{\partial z_2}{\partial \beta_2} & \cdots & \frac{\partial z_m}{\partial \beta_2} \\
+                    \vdots & \vdots & \vdots & \vdots \\
+                    \frac{\partial z_1}{\partial \beta_n} & \frac{\partial z_2}{\partial \beta_n} & \cdots & \frac{\partial z_m}{\partial \beta_n}\\
+                \end{bmatrix} = X^T,\quad & \frac{\partial z_i}{\partial \beta_j} 
+                \text{ 는 j번째 beta가 변할때 zi가 얼마만큼 변하는지 의미 } \\
+                & \frac{\partial z}{\partial b} = 
+                \begin{bmatrix}
+                    \frac{\partial z_1}{\partial b}\\
+                    \frac{\partial z_2}{\partial b}\\
+                    \vdots \\
+                    \frac{\partial z_m}{\partial b}\\
+                \end{bmatrix} =                 
+                \begin{bmatrix}
+                    1\\ 1\\ \vdots \\  1\\
+                \end{bmatrix}, \quad & \frac{\partial z_i}{\partial b} 
+                \text{ 는 b가 변할 때 zi가 얼마만큼 변하는지 의미 } \\
+                \end{align*}
+                $$
+                * python 코드로 보면 
+                    ```python
+                    # error = dL/dz (m, 1) shape
+                    beta_grad = np.transpose(X) @ error
+                    b_grad = np.transpose(np.ones(m,1)) @ error = np.sum(error)
+                    ```
+* 손실함수로 MSE를 사용할 때 다중선형회귀 구조는 아래와 같음
+    * 위에서 정리한 일반적인 다중선형회의 구조에 대입하여 해석하면 아래와 같음
+        * Linear function : 변화 없이 동일,  $z = X\beta + b$
+        * activation function : 사용하지 않음으로 $\hat{y} = z$
+        * loss function : $MSE = \frac{1}{m}\lVert y - \hat{y} \rVert^2 $
+
 * 손실함수와 그레디언트
-    * 손실함수
-    $$
-    \begin{align*} 
-    MSE & = \frac{1}{m}\lVert y - \hat{y} \rVert^2 \\
-    & = \frac{1}{m}\lVert y - X\beta \rVert^2 \\
-    & = \frac{1}{m} (y - X\beta)^T(y - X\beta) \\
-    & = \frac{1}{m}(y^Ty - y^TX\beta - (X\beta)^Ty + (X\beta)^TX\beta) \\
-    & = \frac{1}{m}(y^Ty -2y^TX\beta + \beta^TX^TX\beta) \qquad (\because (X\beta)^Ty \text{ is scalar, so } = y^TX\beta )
-    \end{align*}
-    $$
-    * 벡터 미분 성질
+    * 벡터 미분 성질 기본 성질
         $$
         \begin{align*} 
         & \nabla_\beta(a^T\beta) = a, \nabla_\beta(\beta^Ta) = a \\
@@ -193,15 +319,41 @@
         & \nabla_\beta(\beta^T A^TA\beta) = 2A^TA\beta, \quad \because A^TA \text{ is symetric} \\
         \end{align*}
         $$
+    * 손실함수
+        $$
+        \begin{align*} 
+        MSE & = \frac{1}{m}\lVert y - \hat{y} \rVert^2 \\
+        & = \frac{1}{m} (y - \hat{y})^T(y -\hat{y}) \\
+        & = \frac{1}{m}(y^Ty - y^T\hat{y} - \hat{y}^Ty + \hat{y}^T\hat{y}) \\
+        & = \frac{1}{m}(y^Ty -2y^T\hat{y} + \hat{y}^T\hat{y}) \qquad (\because \hat{y}^Ty \text{ is scalar, so } = y^T\hat{y} )
+        \end{align*}
+        $$
     * 그레디언트 of MSE
         $$
         \begin{align*} 
-        \nabla_\beta MSE & = \nabla_\beta \big( \frac{1}{m}\lVert y - \hat{y} \rVert^2  \big)\\
-        & = \nabla_\beta \big(\frac{1}{m}(y^Ty -2y^TX\beta + \beta^TX^TX\beta) \big)\\
-        & = \frac{1}{m}(0 -2y^TX + 2X^TX\beta), \qquad (\because \text{위 벡터 미분 성질 이용 } ) \\
-        & = \frac{1}{m}(0 -2X^Ty + 2X^TX\beta),\qquad (\because y^TX = X^Ty )\\
-        & = -\frac{2}{m} (X^Ty - X^TX\beta) \\
-        & = -\frac{2}{m}X^T(y - X\beta) \\
-        & = -\frac{2}{m}X^T(y - \hat{y})
+        \nabla_{\hat{y}} L 
+        & = \nabla_{\hat{y}} \big( \frac{1}{m}\lVert y - \hat{y} \rVert^2  \big) \\
+        & = \nabla_{\hat{y}} \big( \frac{1}{m}(y^Ty -2y^T\hat{y} + \hat{y}^T\hat{y}) \big)\\
+        & = \frac{1}{m}(0 -2y + 2\hat{y}), \qquad (\because \text{위 벡터 미분 성질 이용 } ) \\
+        & = -\frac{2}{m}(y - \hat{y}) \\
+        \\
+        \nabla_{z} \hat{y} 
+        & = ones(), \text {(m,1) shape}\\
         \end{align*}
         $$
+    * 최종 $\nabla_\beta L, \nabla_b L$
+        $$
+        \begin{align*} 
+        \nabla_\beta L
+        & = \frac{\partial L}{\partial \hat{y}} \frac{\partial \hat{y}}{\partial z} \frac{\partial z}{\partial \beta} \\
+        & = X^T @ ( ones() * (-\frac{2}{m}(y - \hat{y})) ) \\
+        & = -\frac{2}{m} X^T @ (y - \hat{y}) \\
+        \\
+        \nabla_b L
+        & = \frac{\partial L}{\partial \hat{y}} \frac{\partial \hat{y}}{\partial z} \frac{\partial z}{\partial b} \\
+        & = ones()^T @ \big( ones() * (-\frac{2}{m}(y - \hat{y}))\big) \\
+        & = -\frac{2}{m} ones()^T @ (y - \hat{y}) \\
+        & = -\frac{2}{m} sum(y - \hat{y}) \\
+        & = -2mean(y - \hat{y}) \\
+        \end{align*}
+        $$ 
