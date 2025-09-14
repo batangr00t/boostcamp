@@ -42,7 +42,15 @@
     * rank가 row나 column 보다도 적은 경우는 SVD 이용하여 구할 수 있음
 
 ## Ridge/Lasso regression
-* 
+* 다중회귀 모형에서 과적합이 발생할 때 일반화 성능을 높이기 위해 개선한 방법
+* Ridge 회귀
+    * 손실에 파라미터 제곱을 패널티 항으로 더해준다
+    * 패널티 항이 $\lambda \sum_{i=1}^p\beta^2$ 이기 때문에 L2 Regression 이라고도 한다
+    * 제약조건 영역을 그리면 원형으로 나타나기 때문에 일부 파라미터가 0에 가까워 질수 있다
+* Lasso 회귀
+    * 손실에 파라미터 절대값을 패널티 항으로 더해준다
+    * 패널티 항이 $\lambda \sum_{i=1}^p\lvert\beta\rvert$ 이기 때문에 L1 Regression 이라고도 한다
+    * 제약조건에 경계를 그리면 마름모꼴로 나타나기 때문에 $\beta$의 제약조건에 맞는 값을 찾을 대 모서리에서 찾을 확률이 있어서, 그 때는 일부 파라미터 값이 0이기 때문에 파라미터 selection 효과가 있다
 
 ## matrix decomposition
 ### QR decomposition
