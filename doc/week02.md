@@ -61,7 +61,7 @@
 * 조건 
     * column full rank,  rank(A) = m
 * 용도
-    * $Ax=b$ 방정식을 푸는데 편리함 : $ Rx = Q^{T}b$ 로 변경하여 쉽게 품
+    * $Ax=b$ 방정식을 푸는데 편리함 : $ Rx = Q^{T}b $ 로 변경하여 쉽게 품
     * eigen value, eigen vector 구하는데 활용할 수 있음
         $$
         \begin{align*} 
