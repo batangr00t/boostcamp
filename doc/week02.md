@@ -63,15 +63,21 @@
 * 용도
     * $Ax=b$ 방정식을 푸는데 편리함 : $ Rx = Q^{T}b$ 로 변경하여 쉽게 품
     * eigen value, eigen vector 구하는데 활용할 수 있음
-        * $A_1 = Q_1 R_1$ 일 때,
-        * $A_2 = R_1 Q_1 \text{ 라 하면} \\
-        \rightarrow A_2 = (I) R_1 Q_1 = (Q_1^TQ_1) R_1 Q_1 = Q_1^T (Q_1 R_1) Q_1 = Q_1^T A_1 Q_1 \\
-        \rightarrow A_1 \text{ is similar to } A_2 \\
-        \rightarrow A_1, A_2\text { 는 engenvalue가 같다}$ 
-        * $A_{k+1} = R_k Q_k \text{ 로 두면} \\
-        \rightarrow A_{k+1} = (Q_k^TQ_k) R_k Q_k = Q_k^T (Q_k R_k) Q_k = Q_k^T A_k Q_k \\
-        \rightarrow A_{k+1} \text{ is similar to }  A_k$
-        * 결국 $A_1, A_2, A_3, ... A_n$ 은 모두 같은 eigen value를 갖는다
+        $$
+        \begin{align*} 
+        & A_1 = Q_1 R_1 \\
+        \\
+        & A_2 = R_1 Q_1 \\
+        \rightarrow & A_2 = (I) R_1 Q_1 = (Q_1^TQ_1) R_1 Q_1 = Q_1^T (Q_1 R_1) Q_1 = Q_1^T A_1 Q_1 \\
+        \rightarrow & A_1 \text{ is similar to } A_2 \\
+        \rightarrow & A_1, A_2\text { 는 engenvalue가 같다} \\
+        \\
+        & A_{k+1} = R_k Q_k \text{ 로 두면} \\
+        \rightarrow & A_{k+1} = (Q_k^TQ_k) R_k Q_k = Q_k^T (Q_k R_k) Q_k = Q_k^T A_k Q_k \\
+        \rightarrow & A_{k+1} \text{ is similar to }  A_k
+        \end{align*} 
+        $$
+    * 결국 $A_1, A_2, A_3, ... A_n$ 은 모두 같은 eigen value를 갖는다
 
 ### eigen decomposition
 * 행렬 A는 아래와 같이 분해할 수 있음
@@ -110,7 +116,7 @@
 
 ## 다중선형회귀 구조 분석
 * 일반적인 선형회귀 구조
-    * 데이터 $ X=(m,n), y=(m,1)$가 주어짐
+    * 데이터 $ X=(m,n), y=(m,1) $가 주어짐
     * 주어진 데이터는 X -> Linear function => activation function -> loss function 를 거처 scalar로 계산
         * Linear function : $z = X\beta + b, \qquad z=(m,1), X=(m,n), \beta=(n,1), b=(1,1)$
             * 엄밀한 관점에서는 선형변환이 아니지만, $[X, 1]$ 형태로 해석할 수 있기 때문에 선형 변환이라고 인식함
