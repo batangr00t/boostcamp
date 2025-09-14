@@ -10,13 +10,38 @@
 * 다중선형회귀 구조 분석
 
 ## 혼란스러운 용어 정리
-* 차원 (dimention)
-    * 라이브러리, 수학 차이
-* inner prodoct
-    * vector
-    * matrix : 라이브러리, 수학 차이
+* 차원 (dimention, ndim)
+    * 선형대수에서 사용하는 차원의 의미 : vector space의 base element의 원소 갯수
+    * phtion, numpy, pytorch에서 사용하는 차원의 의미
+        * ndim : 차원의 갯수 = 중첩배열의 중첩 횟수
+        * 여러 함수에서 사용하는 dim=0, dim=1 같은 코드의 의미는 가장 바깥 배열을 0으로 하여 안쪽 배열로 들어갈 수록 1씩 증가하여 index를 부여한 것
+    * 비교 예시
+        * $A = [[1,3], [2,6]]$
+        * 수학에서 A column space 의 차원은 1임 : base가 {$[1,3]$}으로 원소가 하나이기 때문
+        * A.ndim=2 임 : 배열이 두번 중첩되어 있기 때문
+* inner prodoct : 라이브러리, 수학 차이
+    * vector : 두 벡터의 내적을 구하는 것으로 라이브러리, 수학에서 동일한 개념
+        * np.inner(a, b) = np.sum(a*b) : 각 성분별 곱의 합
+    * matrix : 서로 다름
+        * 라이브러리 : 마지막 차원의 벡터 내적을 계산, 결과는 행렬
+        * 수학 : 프로베니우스 내적이 대표적인 행렬간 내적, 결과는 스칼라
+        * 프로베니우스 내적 : $tr(XY^T)$ = X, Y의 element-wise 곱의 합
 
 ## pseudo-inverse ( Moore-Penrose inverse ) - left, right
+* m, n이 달라 역행렬을 계산할 수 없을 때 유사 역행렬을 이용할 수 있음
+    * left inverse
+        * $A^+ = (A^TA)^{-1}A^T$
+        * 답이 없는 상황에서 유사해 찾기
+        * 열공간 Col(A)에서 b와 가장 가까운 점 찾기
+    * right inverse 
+        * $A^+ = A^T(AA^T)^{-1}$
+        * 답이 무수히 많은 상황에서 경제적인 답 찾기
+        * $Ax=b$를 만족하는 무수히 많은 해 중 Row(A)에 속하는 해 찾기
+* 조건
+    * 위 계산식은 row full rank이거나, column full rank일 때 사용하는 방식
+    * rank가 row나 column 보다도 적은 경우는 SVD 이용하여 구할 수 있음
+
+## Ridge/Lasso regression
 * 
 
 ## matrix decomposition
@@ -31,7 +56,14 @@
     * $Ax=b$ 방정식을 푸는데 편리함 : $ Rx = Q^{T}b$ 로 변경하여 쉽게 품
     * eigen value, eigen vector 구하는데 활용할 수 있음
         * $A_1 = Q_1 R_1$ 일 때,
-        * $A_2 = (I) R_1 Q_1 = (Q_1^TQ_1) R_1 Q_1 = Q_1^T (Q_1 R_1) Q_1 = Q_1^T A_1 Q_1 \rightarrow A_1 \approx A_2$
+        * $A_2 = R_1 Q_1 \text{ 라 하면} \\
+        \rightarrow A_2 = (I) R_1 Q_1 = (Q_1^TQ_1) R_1 Q_1 = Q_1^T (Q_1 R_1) Q_1 = Q_1^T A_1 Q_1 \\
+        \rightarrow A_1 \text{ is similar to } A_2 \\
+        \rightarrow A_1, A_2\text { 는 engenvalue가 같다}$ 
+        * $A_{k+1} = R_k Q_k \text{ 로 두면} \\
+        \rightarrow A_{k+1} = (Q_k^TQ_k) R_k Q_k = Q_k^T (Q_k R_k) Q_k = Q_k^T A_k Q_k \\
+        \rightarrow A_{k+1} \text{ is similar to }  A_k$
+        * 결국 $A_1, A_2, A_3, ... A_n$ 은 모두 같은 eigen value를 갖는다
 
 ### eigen decomposition
 * 행렬 A는 아래와 같이 분해할 수 있음
