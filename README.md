@@ -3,8 +3,8 @@
 * 새롭게 깨닫게 된 것, 오해했던 개념들 바로잡기, 활용방법, 주의사항 등 정리
 
 ## AI Core 주간학습정리
-1. [Week 01](./doc/week01.md) - Pytorch - [연습장](./examples/week01.ipynb)
-1. [Week 02](./doc/week02.md) - AI Math - [연습장](./examples/week02.ipynb)
+1. [Week 01 - Pytorch](./doc/week01.md) 
+1. [Week 02 - AI Math](./doc/week02.md)
 1. [Week 03] - ML Lifecycle
 1. [Week 04] - CV
 1. [Week 05] - NLP
