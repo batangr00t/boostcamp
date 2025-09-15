@@ -5,7 +5,7 @@
 ## AI Core 주간학습정리
 1. [Week 01 - Pytorch](./doc/week01.md) 
 1. [Week 02 - AI Math](./doc/week02.ipynb)
-1. [Week 03] - ML Lifecycle
+1. [Week 03 - ML Lifecycle](./doc/week03.ipynb)
 1. [Week 04] - CV
 1. [Week 05] - NLP
 1. [Week 06] - RecSys
