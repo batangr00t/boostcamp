@@ -5,11 +5,14 @@ description = "boostcamp 8th AI Tech"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "datasets>=4.1.1",
+    "lightning>=2.5.5",
     "matplotlib>=3.10.6",
     "numpy>=2.3.2",
     "pandas>=2.3.2",
     "scikit-learn>=1.7.1",
     "seaborn>=0.13.2",
+    "tensorboard>=2.20.0",
     "torch>=2.8.0",
     "torchvision>=0.23.0",
     "tqdm>=4.67.1",

@@ -6,7 +6,7 @@
 1. [Week 01 - Pytorch](./doc/week01.md) 
 1. [Week 02 - AI Math](./doc/week02.ipynb)
 1. [Week 03 - ML Lifecycle](./doc/week03.ipynb)
-1. [Week 04] - CV
+1. [Week 04 - CV](./doc/week04.ipynb)
 1. [Week 05] - NLP
 1. [Week 06] - RecSys
 1. [Week 07~08] - Domain Common Project
