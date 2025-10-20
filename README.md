@@ -8,7 +8,7 @@
 1. [Week 03 - ML Lifecycle](./doc/week03.ipynb)
 1. [Week 04 - CV](./doc/week04.ipynb)
 1. [Week 05 - NLP](./doc/week05.ipynb)
-1. [Week 06] - RecSys
+1. [Week 06 - RecSys](./doc/week06.ipynb)
 1. [Week 07~08] - Domain Common Project
 1. [Week 09] - Generative AI
 
