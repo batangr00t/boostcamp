@@ -10,6 +10,6 @@
 1. [Week 05 - NLP](./doc/week05.ipynb)
 1. [Week 06 - RecSys](./doc/week06.ipynb)
 1. [Week 07~08 - Domain Common Project](./doc/week07.ipynb)
-1. [Week 09] - Generative AI
+1. [Week 09 - Generative AI](./doc/week09.ipynb)
 
 ## AI Production 주간학습정리
