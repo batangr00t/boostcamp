@@ -13,3 +13,6 @@
 1. [Week 09 - Generative AI](./doc/week09.ipynb)
 
 ## AI Production 주간학습정리
+1. [1차 프로젝트: Book Rating Prediction](https://github.com/boostcampaitech8/pro-recsys-bookratingprediction-recsys-04) 
+1. [2차 프로젝트: Movie Recommendation System](https://github.com/boostcampaitech8/pro-recsys-movierecommendation-recsys-04) 
+1. [최종 프로젝트]
