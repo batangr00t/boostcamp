@@ -15,4 +15,4 @@
 ## AI Production 주간학습정리
 1. [1차 프로젝트: Book Rating Prediction](https://github.com/boostcampaitech8/pro-recsys-bookratingprediction-recsys-04) 
 1. [2차 프로젝트: Movie Recommendation System](https://github.com/boostcampaitech8/pro-recsys-movierecommendation-recsys-04) 
-1. [최종 프로젝트]
+1. [최종 프로젝트: 곡물투자 보조 AI 에이전트](https://github.com/boostcampaitech8/pro-recsys-finalproject-recsys-04)
